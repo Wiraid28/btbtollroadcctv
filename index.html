@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>BTB Toll Road CCTV Monitoring</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #020617;
+      color: white;
+    }
+    header {
+      padding: 15px;
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+      border-bottom: 2px solid #1e293b;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 15px;
+      padding: 15px;
+    }
+    .card {
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 10px;
+    }
+    video {
+      width: 100%;
+      border-radius: 10px;
+      background: black;
+    }
+    .status {
+      font-size: 12px;
+      color: #22c55e;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  🚧 BTB Toll Road CCTV Monitoring
+</header>
+
+<div class="grid">
+  <div class="card">
+    <b>KM 12 A</b> <span class="status">● ONLINE</span>
+    <video id="cam1" autoplay muted controls></video>
+  </div>
+
+  <div class="card">
+    <b>KM 20 B</b> <span class="status">● ONLINE</span>
+    <video id="cam2" autoplay muted controls></video>
+  </div>
+</div>
+
+<script>
+function play(videoId, url) {
+  if (Hls.isSupported()) {
+    const hls = new Hls({ lowLatencyMode: true });
+    hls.loadSource(url);
+    hls.attachMedia(document.getElementById(videoId));
+  }
+}
+
+play("cam1", "http://SERVER:8888/cam1/index.m3u8");
+play("cam2", "http://SERVER:8888/cam2/index.m3u8");
+</script>
+
+</body>
+</html>
