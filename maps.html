@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>BTB Toll Road CCTV - Map</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<style>
+body { margin:0; background:#020617; color:white; }
+#map { height:100vh; }
+video { width:260px; border-radius:8px; background:black; }
+</style>
+</head>
+
+<body>
+<div id="map"></div>
+
+<script>
+const map = L.map('map').setView([-6.4, 107.4], 10);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap'
+}).addTo(map);
+
+const cameras = [
+  {
+    name: "KM 12 A",
+    lat: -6.41,
+    lng: 107.45,
+    hls: "http://SERVER:8888/cam1/index.m3u8"
+  },
+  {
+    name: "KM 20 B",
+    lat: -6.45,
+    lng: 107.50,
+    hls: "http://SERVER:8888/cam2/index.m3u8"
+  }
+];
+
+cameras.forEach((cam, i) => {
+  const marker = L.marker([cam.lat, cam.lng]).addTo(map);
+  marker.bindPopup(`
+    <b>${cam.name}</b><br>
+    <video id="v${i}" autoplay muted controls></video>
+  `);
+
+  marker.on("popupopen", () => {
+    const video = document.getElementById("v" + i);
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(cam.hls);
+      hls.attachMedia(video);
+    }
+  });
+});
+</script>
+
+</body>
+</html>
